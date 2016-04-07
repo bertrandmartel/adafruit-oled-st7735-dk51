@@ -7,7 +7,6 @@ Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK
 ## Scope
 
 * SPI communication between NRF51 board & display
-* draw pixel
 * fill screen
 * joystick (5 actions)
 * draw 128x160 bitmap 16 bit 
