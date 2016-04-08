@@ -9,8 +9,8 @@ Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK
 ## Scope
 
 * SPI communication between NRF51 board & display
-* fill screen
-* joystick (5 actions)
+* fill screen with specified color
+* joystick (5 actions) switch through a sequence of color/image
 * draw 128x160 bitmap 16 bit 
 
 ## Setup/Installation
@@ -26,7 +26,6 @@ export NRF51_SDK_DIR=/path/to/sdk
 ## Build
 
 ```
-cd pca10028
 make
 ```
 
@@ -41,6 +40,12 @@ nrfjprog --family  nRF51 --program _build/nrf51422_xxac.hex
 
 //start firmware
 nrfjprog --family  nRF51 -r
+```
+
+or
+
+```
+./upload.sh
 ```
 
 To debug your code : <a href="https://gist.github.com/akinaru/a38315c5fe79ec5c8c6a9ed90b8df260#debug-your-code">check this link</a>

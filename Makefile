@@ -51,14 +51,16 @@ $(abspath $(NRF51_SDK_DIR)/components/drivers_ext/segger_rtt/SEGGER_RTT.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_ext/segger_rtt/SEGGER_RTT_printf.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/hal/nrf_adc.c) \
 $(abspath $(NRF51_SDK_DIR)/examples/bsp/bsp.c) \
-$(abspath ../main.c) \
+$(abspath src/common.c) \
+$(abspath src/adafruit1_8_oled_library.c) \
+$(abspath src/main.c) \
 $(abspath $(NRF51_SDK_DIR)/components/toolchain/system_nrf51.c)
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath $(NRF51_SDK_DIR)/components/toolchain/gcc/gcc_startup_nrf51.s)
 
 #includes common to all targets
-INC_PATHS += -I$(abspath ..)
+INC_PATHS += -I$(abspath include)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/examples/bsp)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/nrf_soc_nosd)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/device)
