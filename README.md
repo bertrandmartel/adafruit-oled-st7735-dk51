@@ -13,6 +13,12 @@ Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK
 * joystick (5 actions) switch through a sequence of color/image
 * draw 128x160 bitmap 16 bit 
 
+## Configuration
+
+* armgcc toolchain
+* no softdevice flash required
+* nRF5 SDK 11.0.0
+
 ## Setup/Installation
 
 * follow SDK/Toolchain Installation steps section of <a href="https://gist.github.com/akinaru/a38315c5fe79ec5c8c6a9ed90b8df260#installation-steps">this tutorial</a>
