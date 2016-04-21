@@ -137,6 +137,7 @@ void commonInit(const uint8_t *cmdList)
     digital_write(_rst, HIGH);
     delay(500);
   }
+
   if (cmdList) commandList(cmdList);
 }
 
@@ -214,6 +215,60 @@ void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 void fillScreen(uint16_t color)
 {
   fillRect(0, 0,  _width, _height, color);
+}
+
+void draw_bitmap_st7735_from_pstorage(uint16_t pos_x,
+                                      uint16_t pos_y,
+                                      uint16_t bitmap_width,
+                                      uint16_t bitmap_height,
+                                      pstorage_handle_t handle) {
+
+  setAddrWindow(pos_x, pos_y - bitmap_height + 1, pos_x + bitmap_width - 1, pos_y);
+
+  uint32_t count = 0;
+
+  for (uint8_t j = 40; j  > 0; j--) {
+
+    uint32_t retval;
+
+    pstorage_handle_t block_handle;
+
+    retval = pstorage_block_identifier_get(&handle, j - 1, &block_handle);
+
+    if (retval == NRF_SUCCESS) {
+
+      uint8_t  dest_data[1024];
+      uint32_t retval;
+
+      retval = pstorage_load(dest_data, &block_handle, 1024, 0);
+
+      if (retval == NRF_SUCCESS)
+      {
+
+        for (uint16_t k = 1024; k  > 0; k -= 256) {
+
+          for (uint16_t l = 0; l < 256; l += 2) {
+
+            if (count == TX_RX_BUF_LENGTH) {
+              writedata2(m_tx_data, m_rx_data, count);
+              count = 0;
+            }
+            uint16_t index = (k - 256) + l;
+            m_tx_data[count++] = dest_data[index + 1];
+            m_tx_data[count++] = dest_data[index];
+          }
+        }
+      }
+      else
+      {
+        SEGGER_RTT_printf(0, "\x1B[32mpstorage_load FAILURE\x1B[0m\n");
+      }
+    }
+    else {
+      SEGGER_RTT_printf(0, "\x1B[32mpstorage_block_identifier_get FAILURE\x1B[0m\n");
+    }
+  }
+  writedata2(m_tx_data, m_rx_data, count);
 }
 
 void draw_bitmap_st7735(uint16_t pos_x, uint16_t pos_y, const uint16_t *image, uint16_t bitmap_width, uint16_t bitmap_height)

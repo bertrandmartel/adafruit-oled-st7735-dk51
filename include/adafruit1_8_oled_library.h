@@ -43,10 +43,12 @@
  *   Written by Limor Fried/Ladyada for Adafruit Industries.                   *
  *   MIT license, all text above must be included in any redistribution        *
  *******************************************************************************/
- 
+
 #ifndef ADAFRUIT1_8_OLED_LIBRARY
 #define ADAFRUIT1_8_OLED_LIBRARY
 
+#include "pstorage.h"
+ 
 #define ST7735_TFTWIDTH  128
 // for 1.44" display
 #define ST7735_TFTHEIGHT_144 128
@@ -311,6 +313,8 @@ void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 void fillScreen(uint16_t color);
 
 void draw_bitmap_st7735(uint16_t pos_x, uint16_t pos_y, const uint16_t *image, uint16_t bitmap_width, uint16_t bitmap_height);
+
+void draw_bitmap_st7735_from_pstorage(uint16_t pos_x, uint16_t pos_y, uint16_t bitmap_width, uint16_t bitmap_height, pstorage_handle_t handle);
 
 void tft_setup();
 
