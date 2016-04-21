@@ -112,15 +112,15 @@ static volatile uint8_t button_state = BUTTON_NONE;
 APP_TIMER_DEF(m_adc_sampling_timer_id);
 
 static const uint16_t color_sequence[] = {
-  8,
-  ST7735_BLUE,
-  ST7735_RED,
-  ST7735_GREEN,
-  ST7735_CYAN,
-  ST7735_MAGENTA,
-  ST7735_YELLOW,
-  ST7735_WHITE,
-  ST7735_BLACK
+	8,
+	ST7735_BLUE,
+	ST7735_RED,
+	ST7735_GREEN,
+	ST7735_CYAN,
+	ST7735_MAGENTA,
+	ST7735_YELLOW,
+	ST7735_WHITE,
+	ST7735_BLACK
 };
 
 static volatile bool button_state_change = false;
@@ -129,65 +129,65 @@ static volatile bool button_state_change = false;
  */
 static void gpiote_init(void)
 {
-  APP_GPIOTE_INIT(APP_GPIOTE_MAX_USERS);
+	APP_GPIOTE_INIT(APP_GPIOTE_MAX_USERS);
 }
 
 // ADC timer handler to start ADC sampling
 static void adc_sampling_timeout_handler(void * p_context)
 {
-  NRF_ADC->EVENTS_END  = 0;
-  NRF_ADC->TASKS_START = 1;            //Start ADC sampling
+	NRF_ADC->EVENTS_END  = 0;
+	NRF_ADC->TASKS_START = 1;            //Start ADC sampling
 }
 
 /**@brief Function for starting application timers.
  */
 static void application_timers_start(void)
 {
-  //ADC timer start
-  uint32_t err_code = app_timer_start(m_adc_sampling_timer_id, ADC_SAMPLING_INTERVAL, NULL);
-  APP_ERROR_CHECK(err_code);
+	//ADC timer start
+	uint32_t err_code = app_timer_start(m_adc_sampling_timer_id, ADC_SAMPLING_INTERVAL, NULL);
+	APP_ERROR_CHECK(err_code);
 }
 
 static void increment_color() {
-  if (color_index == color_sequence[0]) {
-    color_index = 0;
-  }
-  else {
-    color_index++;
-  }
+	if (color_index == color_sequence[0]) {
+		color_index = 0;
+	}
+	else {
+		color_index++;
+	}
 }
 
 static void decrement_color() {
-  if (color_index != 0) {
-    color_index--;
-  }
-  else {
-    color_index = color_sequence[0];
-  }
+	if (color_index != 0) {
+		color_index--;
+	}
+	else {
+		color_index = color_sequence[0];
+	}
 }
 
 /**@brief Function to make the ADC start a battery level conversion.
  */
 static void adc_init(void)
 {
-  NRF_ADC->CONFIG = (ADC_CONFIG_EXTREFSEL_None << ADC_CONFIG_EXTREFSEL_Pos) /*!< Analog external reference inputs disabled. */
-                    | (ADC_CONFIG_PSEL_AnalogInput5 << ADC_CONFIG_PSEL_Pos)
-                    | (ADC_CONFIG_REFSEL_VBG << ADC_CONFIG_REFSEL_Pos)   /*!< Use internal 1.2V bandgap voltage as reference for conversion. */
-                    | (ADC_CONFIG_INPSEL_AnalogInputOneThirdPrescaling << ADC_CONFIG_INPSEL_Pos) /*!< Analog input specified by PSEL with 1/3 prescaling used as input for the conversion. */
-                    | (ADC_CONFIG_RES_10bit << ADC_CONFIG_RES_Pos);  /*!< 10bit ADC resolution. */
-  // enable ADC
-  NRF_ADC->ENABLE = 1; /* Bit 0 : ADC enable. */
+	NRF_ADC->CONFIG = (ADC_CONFIG_EXTREFSEL_None << ADC_CONFIG_EXTREFSEL_Pos) /*!< Analog external reference inputs disabled. */
+	                  | (ADC_CONFIG_PSEL_AnalogInput5 << ADC_CONFIG_PSEL_Pos)
+	                  | (ADC_CONFIG_REFSEL_VBG << ADC_CONFIG_REFSEL_Pos)   /*!< Use internal 1.2V bandgap voltage as reference for conversion. */
+	                  | (ADC_CONFIG_INPSEL_AnalogInputOneThirdPrescaling << ADC_CONFIG_INPSEL_Pos) /*!< Analog input specified by PSEL with 1/3 prescaling used as input for the conversion. */
+	                  | (ADC_CONFIG_RES_10bit << ADC_CONFIG_RES_Pos);  /*!< 10bit ADC resolution. */
+	// enable ADC
+	NRF_ADC->ENABLE = 1; /* Bit 0 : ADC enable. */
 
-  NRF_ADC->INTENSET = ADC_INTENSET_END_Msk;
-  NVIC_SetPriority(ADC_IRQn, 1);
-  NVIC_EnableIRQ(ADC_IRQn);
+	NRF_ADC->INTENSET = ADC_INTENSET_END_Msk;
+	NVIC_SetPriority(ADC_IRQn, 1);
+	NVIC_EnableIRQ(ADC_IRQn);
 }
 
 /**@brief Function for initializing the button handler module.
  */
 static void buttons_init(void)
 {
-  nrf_gpio_cfg_sense_input(BUTTON_PIN, BUTTON_PULL, NRF_GPIO_PIN_SENSE_LOW);
+	nrf_gpio_cfg_sense_input(BUTTON_PIN, BUTTON_PULL, NRF_GPIO_PIN_SENSE_LOW);
 }
 
 
@@ -197,26 +197,26 @@ static void buttons_init(void)
  */
 void ADC_IRQHandler(void)
 {
-  NRF_ADC->EVENTS_END = 0;
-  uint16_t adc_result = NRF_ADC->RESULT;
-  NRF_ADC->TASKS_STOP = 1;
+	NRF_ADC->EVENTS_END = 0;
+	uint16_t adc_result = NRF_ADC->RESULT;
+	NRF_ADC->TASKS_STOP = 1;
 
-  uint8_t old_state = button_state;
+	uint8_t old_state = button_state;
 
-  if (button_state == BUTTON_NONE) {
-    if (adc_result < 62) button_state = BUTTON_DOWN;
-    else if (adc_result < 310) button_state = BUTTON_RIGHT;
-    else if (adc_result < 465) button_state = BUTTON_SELECT;
-    else if (adc_result < 620) button_state = BUTTON_UP;
-    else if (adc_result < 1020) button_state = BUTTON_LEFT;
-  }
-  else {
-    if (adc_result > 1020) button_state = BUTTON_NONE;
-  }
-  if (old_state != button_state) {
-    SEGGER_RTT_printf(0, "\x1B[32mbutton state : %s\x1B[0m\n", BUTTON_STATE_STRING_ENUM[button_state]);
-    button_state_change = true;
-  }
+	if (button_state == BUTTON_NONE) {
+		if (adc_result < 62) button_state = BUTTON_DOWN;
+		else if (adc_result < 310) button_state = BUTTON_RIGHT;
+		else if (adc_result < 465) button_state = BUTTON_SELECT;
+		else if (adc_result < 620) button_state = BUTTON_UP;
+		else if (adc_result < 1020) button_state = BUTTON_LEFT;
+	}
+	else {
+		if (adc_result > 1020) button_state = BUTTON_NONE;
+	}
+	if (old_state != button_state) {
+		SEGGER_RTT_printf(0, "\x1B[32mbutton state : %s\x1B[0m\n", BUTTON_STATE_STRING_ENUM[button_state]);
+		button_state_change = true;
+	}
 }
 
 /**
@@ -225,30 +225,30 @@ void ADC_IRQHandler(void)
 
 void bsp_configuration() {
 
-  uint32_t err_code = NRF_SUCCESS;
+	uint32_t err_code = NRF_SUCCESS;
 
-  NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
-  NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-  NRF_CLOCK->TASKS_LFCLKSTART    = 1;
+	NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
+	NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
+	NRF_CLOCK->TASKS_LFCLKSTART    = 1;
 
-  while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0) {
-    // Do nothing.
-  }
+	while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0) {
+		// Do nothing.
+	}
 
-  APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
+	APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
 
-  err_code = app_timer_create(&m_adc_sampling_timer_id,
-                              APP_TIMER_MODE_REPEATED,
-                              adc_sampling_timeout_handler);
+	err_code = app_timer_create(&m_adc_sampling_timer_id,
+	                            APP_TIMER_MODE_REPEATED,
+	                            adc_sampling_timeout_handler);
 
-  err_code = bsp_init(BSP_INIT_LED, APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), NULL);
-  APP_ERROR_CHECK(err_code);
+	err_code = bsp_init(BSP_INIT_LED, APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), NULL);
+	APP_ERROR_CHECK(err_code);
 }
 
 void draw_bitmap() {
-  if (color_index == 0) {
-    draw_bitmap_st7735(0, ST7735_TFTHEIGHT_18, imageLogo, ST7735_TFTWIDTH, ST7735_TFTHEIGHT_18);
-  }
+	if (color_index == 0) {
+		draw_bitmap_st7735(0, ST7735_TFTHEIGHT_18, imageLogo, ST7735_TFTWIDTH, ST7735_TFTHEIGHT_18);
+	}
 }
 
 /**
@@ -256,58 +256,58 @@ void draw_bitmap() {
  */
 int main(void) {
 
-  // Setup bsp module.
-  bsp_configuration();
-  buttons_init();
-  gpiote_init();
-  adc_init();
-  application_timers_start();
-  tft_setup();
+	// Setup bsp module.
+	bsp_configuration();
+	buttons_init();
+	gpiote_init();
+	adc_init();
+	application_timers_start();
+	tft_setup();
 
-  fillScreen(ST7735_WHITE);
+	fillScreen(ST7735_WHITE);
 
-  color_index = 0;
+	color_index = 0;
 
-  draw_bitmap_st7735(0, ST7735_TFTHEIGHT_18, imageLogo, ST7735_TFTWIDTH, ST7735_TFTHEIGHT_18);
+	draw_bitmap_st7735(0, ST7735_TFTHEIGHT_18, imageLogo, ST7735_TFTWIDTH, ST7735_TFTHEIGHT_18);
 
-  for (;;)
-  {
-    if (button_state_change) {
+	for (;;)
+	{
+		if (button_state_change) {
 
-      button_state_change = false;
-      SEGGER_RTT_printf(0, "\x1B[32mbutton_state_change\x1B[0m\n");
+			button_state_change = false;
+			SEGGER_RTT_printf(0, "\x1B[32mbutton_state_change\x1B[0m\n");
 
-      switch (button_state) {
+			switch (button_state) {
 
-      case BUTTON_DOWN:
-        decrement_color();
-        draw_bitmap();
-        if (color_index != 0) {
-          fillScreen(color_sequence[color_index]);
-        }
-        break;
-      case BUTTON_RIGHT:
-        increment_color();
-        draw_bitmap();
-        if (color_index != 0) {
-          fillScreen(color_sequence[color_index]);
-        }
-        break;
-      case BUTTON_UP:
-        increment_color();
-        draw_bitmap();
-        if (color_index != 0) {
-          fillScreen(color_sequence[color_index]);
-        }
-        break;
-      case BUTTON_LEFT:
-        decrement_color();
-        draw_bitmap();
-        if (color_index != 0) {
-          fillScreen(color_sequence[color_index]);
-        }
-        break;
-      }
-    }
-  }
+			case BUTTON_DOWN:
+				decrement_color();
+				draw_bitmap();
+				if (color_index != 0) {
+					fillScreen(color_sequence[color_index]);
+				}
+				break;
+			case BUTTON_RIGHT:
+				increment_color();
+				draw_bitmap();
+				if (color_index != 0) {
+					fillScreen(color_sequence[color_index]);
+				}
+				break;
+			case BUTTON_UP:
+				increment_color();
+				draw_bitmap();
+				if (color_index != 0) {
+					fillScreen(color_sequence[color_index]);
+				}
+				break;
+			case BUTTON_LEFT:
+				decrement_color();
+				draw_bitmap();
+				if (color_index != 0) {
+					fillScreen(color_sequence[color_index]);
+				}
+				break;
+			}
+		}
+	}
 }
