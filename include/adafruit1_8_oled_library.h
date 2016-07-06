@@ -318,4 +318,8 @@ void draw_bitmap_st7735_from_pstorage(uint16_t pos_x, uint16_t pos_y, uint16_t b
 
 void tft_setup();
 
+void set_bitmap_stream();
+
+void draw_bitmap_st7735_stream(const uint8_t *image, unsigned long length);
+
 #endif //ADAFRUIT1_8_OLED_LIBRARY

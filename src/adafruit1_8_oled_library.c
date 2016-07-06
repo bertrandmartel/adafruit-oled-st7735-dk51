@@ -61,6 +61,9 @@ uint32_t  _rs, colstart, rowstart; // some displays need this changed
 int32_t   _rst;  // Must use signed type since a -1 sentinel is assigned.
 int16_t _width, _height;
 
+int32_t stream_x_pos = 0;
+int32_t stream_y_pos = 0;
+
 static const nrf_drv_spi_t m_spi_master = NRF_DRV_SPI_INSTANCE(0);
 
 uint32_t send_spi_data_command(uint8_t * const p_tx_data, uint8_t * const p_rx_data, const uint16_t  txlen, const uint16_t  rxlen)
@@ -294,6 +297,60 @@ void draw_bitmap_st7735(uint16_t pos_x, uint16_t pos_y, const uint16_t *image, u
     i = i - 2 * bitmap_width;
   }
   writedata2(m_tx_data, m_rx_data, count);
+}
+
+void set_bitmap_stream(){
+  stream_x_pos = 0;
+  stream_y_pos = 0;
+}
+
+void draw_bitmap_st7735_stream(const uint8_t *image, unsigned long length)
+{
+  int i = ST7735_TFTWIDTH*2-1;
+
+  uint32_t x0 = stream_x_pos;
+  uint32_t y0 = stream_y_pos;
+  uint32_t x1 = (((stream_x_pos + length)/2) % ST7735_TFTWIDTH);
+  uint32_t y1 = stream_y_pos + (length / ST7735_TFTWIDTH)/2;
+
+  setAddrWindow(x0, y0, ST7735_TFTWIDTH-1, ST7735_TFTHEIGHT_18);
+
+  uint16_t pow= 1;
+  uint32_t count = 0;
+  for (uint16_t y = y0; y < (y1+1); y++) {
+
+    if (y == y1){
+      x0 = x1;
+      if (x0==0){
+        break;
+      }
+    }
+
+    for (int x = ST7735_TFTWIDTH; x >=(x0+1); x--) {
+
+      if (count == TX_RX_BUF_LENGTH) {
+        writedata2(m_tx_data, m_rx_data, count);
+        count = 0;
+      }
+
+      m_tx_data[count++] = image[i-1];
+
+      if ((y==y1) && ((x1%2)!=0)){
+
+      }
+      else{
+        m_tx_data[count++] = image[i];
+      }
+      i-=2;
+    }
+    pow++;
+    i=ST7735_TFTWIDTH*2*pow-1;
+    x0=0;
+  }
+  writedata2(m_tx_data, m_rx_data, count);
+
+  stream_x_pos=x1;
+  stream_y_pos=y1;
 }
 
 void tft_setup()
