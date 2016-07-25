@@ -333,13 +333,13 @@ void draw_bitmap_st7735_stream(const uint8_t *image, unsigned long length)
         count = 0;
       }
 
-      m_tx_data[count++] = image[i-1];
+      m_tx_data[count++] = image[i];
 
       if ((y==y1) && ((x1%2)!=0)){
 
       }
       else{
-        m_tx_data[count++] = image[i];
+        m_tx_data[count++] = image[i-1];
       }
       i-=2;
     }
