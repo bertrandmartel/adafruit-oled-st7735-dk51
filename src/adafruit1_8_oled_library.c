@@ -299,34 +299,34 @@ void draw_bitmap_st7735(uint16_t pos_x, uint16_t pos_y, const uint16_t *image, u
   writedata2(m_tx_data, m_rx_data, count);
 }
 
-void set_bitmap_stream(){
+void set_bitmap_stream() {
   stream_x_pos = 0;
   stream_y_pos = 0;
 }
 
 void draw_bitmap_st7735_stream(const uint8_t *image, unsigned long length)
 {
-  int i = ST7735_TFTWIDTH*2-1;
+  int i = ST7735_TFTWIDTH * 2 - 1;
 
   uint32_t x0 = stream_x_pos;
   uint32_t y0 = stream_y_pos;
-  uint32_t x1 = (((stream_x_pos + length)/2) % ST7735_TFTWIDTH);
-  uint32_t y1 = stream_y_pos + (length / ST7735_TFTWIDTH)/2;
+  uint32_t x1 = (((stream_x_pos + length) / 2) % ST7735_TFTWIDTH);
+  uint32_t y1 = stream_y_pos + (length / ST7735_TFTWIDTH) / 2;
 
-  setAddrWindow(x0, y0, ST7735_TFTWIDTH-1, ST7735_TFTHEIGHT_18);
+  setAddrWindow(x0, y0, ST7735_TFTWIDTH - 1, ST7735_TFTHEIGHT_18);
 
-  uint16_t pow= 1;
+  uint16_t pow = 1;
   uint32_t count = 0;
-  for (uint16_t y = y0; y < (y1+1); y++) {
+  for (uint16_t y = y0; y < (y1 + 1); y++) {
 
-    if (y == y1){
+    if (y == y1) {
       x0 = x1;
-      if (x0==0){
+      if (x0 == 0) {
         break;
       }
     }
 
-    for (int x = ST7735_TFTWIDTH; x >=(x0+1); x--) {
+    for (int x = ST7735_TFTWIDTH; x >= (x0 + 1); x--) {
 
       if (count == TX_RX_BUF_LENGTH) {
         writedata2(m_tx_data, m_rx_data, count);
@@ -335,22 +335,22 @@ void draw_bitmap_st7735_stream(const uint8_t *image, unsigned long length)
 
       m_tx_data[count++] = image[i];
 
-      if ((y==y1) && ((x1%2)!=0)){
+      if ((y == y1) && ((x1 % 2) != 0)) {
 
       }
-      else{
-        m_tx_data[count++] = image[i-1];
+      else {
+        m_tx_data[count++] = image[i - 1];
       }
-      i-=2;
+      i -= 2;
     }
     pow++;
-    i=ST7735_TFTWIDTH*2*pow-1;
-    x0=0;
+    i = ST7735_TFTWIDTH * 2 * pow - 1;
+    x0 = 0;
   }
   writedata2(m_tx_data, m_rx_data, count);
 
-  stream_x_pos=x1;
-  stream_y_pos=y1;
+  stream_x_pos = x1;
+  stream_y_pos = y1;
 }
 
 void tft_setup()
