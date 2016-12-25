@@ -1,6 +1,6 @@
 # Adafruit OLED 1.8 display on DK51 board
 
-[![Build Status](https://drone.io/github.com/akinaru/adafruit-oled-st7735-dk51/status.png)](https://drone.io/github.com/akinaru/adafruit-oled-st7735-dk51/latest)
+[![Build Status](https://drone.io/github.com/bertrandmartel/adafruit-oled-st7735-dk51/status.png)](https://drone.io/github.com/bertrandmartel/adafruit-oled-st7735-dk51/latest)
 
 Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK board
 
@@ -21,7 +21,7 @@ Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK
 
 ## Setup/Installation
 
-* follow SDK/Toolchain Installation steps section of <a href="https://gist.github.com/akinaru/a38315c5fe79ec5c8c6a9ed90b8df260#installation-steps">this tutorial</a>
+* follow SDK/Toolchain Installation steps section of <a href="https://gist.github.com/bertrandmartel/a38315c5fe79ec5c8c6a9ed90b8df260#installation-steps">this tutorial</a>
 
 * specify NRF51 SDK directory with :
 
@@ -54,7 +54,7 @@ or
 ./upload.sh
 ```
 
-To debug your code : <a href="https://gist.github.com/akinaru/a38315c5fe79ec5c8c6a9ed90b8df260#debug-your-code">check this link</a>
+To debug your code : <a href="https://gist.github.com/bertrandmartel/a38315c5fe79ec5c8c6a9ed90b8df260#debug-your-code">check this link</a>
 
 ## External projects
 
@@ -62,7 +62,7 @@ To debug your code : <a href="https://gist.github.com/akinaru/a38315c5fe79ec5c8c
 * https://github.com/adafruit/Adafruit-ST7735-Library
 * https://github.com/NordicSemiconductor/nrf51-ble-app-lbs
 * Nordic Semicondictor NRF51 SDK SPI sample code
-* https://github.com/akinaru/spi-master-slave-dk51
+* https://github.com/bertrandmartel/spi-master-slave-dk51
 
 ## License
 
