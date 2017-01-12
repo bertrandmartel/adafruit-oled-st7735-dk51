@@ -1,6 +1,6 @@
 # Adafruit OLED 1.8 display on DK51 board
 
-[![Build Status](https://drone.io/github.com/bertrandmartel/adafruit-oled-st7735-dk51/status.png)](https://drone.io/github.com/bertrandmartel/adafruit-oled-st7735-dk51/latest)
+[![Build Status](https://travis-ci.org/bertrandmartel/adafruit-oled-st7735-dk51.svg?branch=master)](https://travis-ci.org/bertrandmartel/adafruit-oled-st7735-dk51)
 
 Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK board
 
