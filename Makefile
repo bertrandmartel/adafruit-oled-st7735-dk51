@@ -35,50 +35,58 @@ SIZE            := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-size'
 #function for removing duplicates in a list
 remduplicates = $(strip $(if $1,$(firstword $1) $(call remduplicates,$(filter-out $(firstword $1),$1))))
 
+# $(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/delay/nrf_delay.c) not there anymore ?
+
 #source common to all targets
 C_SOURCE_FILES += \
 $(abspath $(NRF51_SDK_DIR)/components/libraries/button/app_button.c) \
+$(abspath $(NRF51_SDK_DIR)/components/libraries/util/app_error_weak.c) \
 $(abspath $(NRF51_SDK_DIR)/components/libraries/util/app_error.c) \
 $(abspath $(NRF51_SDK_DIR)/components/libraries/timer/app_timer.c) \
 $(abspath $(NRF51_SDK_DIR)/components/libraries/util/app_util_platform.c) \
 $(abspath $(NRF51_SDK_DIR)/components/libraries/util/nrf_assert.c) \
-$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/delay/nrf_delay.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/common/nrf_drv_common.c) \
-$(abspath $(NRF51_SDK_DIR)/components/libraries/gpiote/app_gpiote.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c) \
+$(abspath $(NRF51_SDK_DIR)/components/libraries/gpiote/app_gpiote.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/spi_master/nrf_drv_spi.c) \
-$(abspath $(NRF51_SDK_DIR)/components/drivers_ext/segger_rtt/SEGGER_RTT.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_ext/segger_rtt/SEGGER_RTT_printf.c) \
+$(abspath $(NRF51_SDK_DIR)/components/drivers_ext/segger_rtt/SEGGER_RTT.c) \
 $(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/hal/nrf_adc.c) \
-$(abspath $(NRF51_SDK_DIR)/examples/bsp/bsp.c) \
+$(abspath $(NRF51_SDK_DIR)/components/boards/boards.c) \
+$(abspath $(NRF51_SDK_DIR)/components/libraries/bsp/bsp.c) \
 $(abspath src/common.c) \
 $(abspath src/adafruit1_8_oled_library.c) \
 $(abspath src/main.c) \
 $(abspath $(NRF51_SDK_DIR)/components/toolchain/system_nrf51.c)
 
 #assembly files common to all targets
-ASM_SOURCE_FILES  = $(abspath $(NRF51_SDK_DIR)/components/toolchain/gcc/gcc_startup_nrf51.s)
+ASM_SOURCE_FILES  = $(abspath $(NRF51_SDK_DIR)/components/toolchain/gcc/gcc_startup_nrf51.S)
+
+#INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/pstorage) not there anymore ?
+#INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/config) not there anymore ?
 
 #includes common to all targets
 INC_PATHS += -I$(abspath include)
-INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/examples/bsp)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/bsp)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/nrf_soc_nosd)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/device)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/hal)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/button)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/delay)
-INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/gpiote)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/util)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/common)
-INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/pstorage)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/toolchain)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/timer)
-INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/config)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/spi_master)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_nrf/gpiote)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/toolchain/gcc)
 INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/drivers_ext/segger_rtt)
-INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/toolchain/CMSIS/Include)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/toolchain/cmsis/include)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/log)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/log/src)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/boards)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/examples/dfu/experimental_ant_bootloader)
+INC_PATHS += -I$(abspath $(NRF51_SDK_DIR)/components/libraries/gpiote)
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
@@ -98,6 +106,7 @@ CFLAGS += -mfloat-abi=soft
 # keep every function in separate section. This will allow linker to dump unused functions
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin --short-enums
+CFLAGS += -DNRF51422
 
 # keep every function in separate section. This will allow linker to dump unused functions
 LDFLAGS += -Xlinker -Map=$(LISTING_DIRECTORY)/$(OUTPUT_FILENAME).map
@@ -113,6 +122,8 @@ ASMFLAGS += -x assembler-with-cpp
 ASMFLAGS += -DNRF51
 ASMFLAGS += -DSWI_DISABLE0
 ASMFLAGS += -DBOARD_PCA10028
+ASMFLAGS += -DNRF51422
+
 #default target - first one defined
 default: clean nrf51422_xxac
 
@@ -133,10 +144,10 @@ C_OBJECTS = $(addprefix $(OBJECT_DIRECTORY)/, $(C_SOURCE_FILE_NAMES:.c=.o) )
 
 ASM_SOURCE_FILE_NAMES = $(notdir $(ASM_SOURCE_FILES))
 ASM_PATHS = $(call remduplicates, $(dir $(ASM_SOURCE_FILES) ))
-ASM_OBJECTS = $(addprefix $(OBJECT_DIRECTORY)/, $(ASM_SOURCE_FILE_NAMES:.s=.o) )
+ASM_OBJECTS = $(addprefix $(OBJECT_DIRECTORY)/, $(ASM_SOURCE_FILE_NAMES:.S=.o) )
 
 vpath %.c $(C_PATHS)
-vpath %.s $(ASM_PATHS)
+vpath %.S $(ASM_PATHS)
 
 OBJECTS = $(C_OBJECTS) $(ASM_OBJECTS)
 
@@ -158,7 +169,7 @@ $(OBJECT_DIRECTORY)/%.o: %.c
 	$(NO_ECHO)$(CC) $(CFLAGS) $(INC_PATHS) -c -o $@ $<
 
 # Assemble files
-$(OBJECT_DIRECTORY)/%.o: %.s
+$(OBJECT_DIRECTORY)/%.o: %.S
 	@echo Compiling file: $(notdir $<)
 	$(NO_ECHO)$(CC) $(ASMFLAGS) $(INC_PATHS) -c -o $@ $<
 
