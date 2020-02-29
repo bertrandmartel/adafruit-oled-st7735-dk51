@@ -10,7 +10,7 @@ wget -q https://www.nordicsemi.com/-/media/Software-and-other-downloads/SDKs/nRF
 unzip -qq sdk.zip -d ./sdk
 rm sdk.zip
 export NRF51_SDK_DIR=$PWD/sdk/nRF5_SDK_12.3.0_d7731ad
-echo "GNU_INSTALL_ROOT := `pwd`/gcc-arm-none-eabi-5_2-2015q4"$'\r\n'"GNU_VERSION := 5.2.1"$'\r\n'"GNU_PREFIX := arm-none-eabi"$'\r\n' > ${NRF51_SDK_DIR}/components//toolchain/gcc/Makefile.posix
+echo "GNU_INSTALL_ROOT := `pwd`/gcc-arm-none-eabi-5_2-2015q4"$'\r\n'"GNU_VERSION := 5.2.1"$'\r\n'"GNU_PREFIX := arm-none-eabi"$'\r\n' > ${NRF51_SDK_DIR}/components/toolchain/gcc/Makefile.posix
 mkdir -p $NRF51_SDK_DIR/components/drivers_ext/segger_rtt
 git clone https://gist.github.com/25a566178766c7d0a7e04a18b341a732.git
 cp ./25a566178766c7d0a7e04a18b341a732/* $NRF51_SDK_DIR/components/drivers_ext/segger_rtt/
