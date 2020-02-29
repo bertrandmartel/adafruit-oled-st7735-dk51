@@ -17,7 +17,7 @@ Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK
 
 * armgcc toolchain
 * no softdevice flash required
-* nRF5 SDK 11.0.0
+* nRF5 SDK 12.3.0
 
 ## Setup/Installation
 
@@ -25,19 +25,19 @@ Integration of Adafruit OLED ST7735 1.8 display on Nordic Semiconductor NRF51 DK
 
 * specify NRF51 SDK directory with :
 
-```
+```bash
 export NRF51_SDK_DIR=/path/to/sdk
 ```
 
 ## Build
 
-```
+```bash
 make
 ```
 
 ## Upload
 
-```
+```bash
 //erase firmware
 nrfjprog --family  nRF51 -e
 
@@ -50,7 +50,7 @@ nrfjprog --family  nRF51 -r
 
 or
 
-```
+```bash
 ./upload.sh
 ```
 
@@ -66,4 +66,4 @@ To debug your code : <a href="https://gist.github.com/bertrandmartel/a38315c5fe7
 
 ## License
 
-The MIT License (MIT) Copyright (c) 2016 Bertrand Martel
+The MIT License (MIT) Copyright (c) 2020 Bertrand Martel
