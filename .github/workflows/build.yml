@@ -1,0 +1,14 @@
+on: [push, pull_request]
+name: Build
+jobs:
+  build:
+    strategy:
+      matrix:
+        compiler: [clang]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      env:
+        CC: ${{ matrix.compiler }}
+      run: ./ci.sh
